@@ -10,9 +10,16 @@ app.use(
   })
 );
 
-// ommon middileware
+// common middileware
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extende: true, limit: "16kb" }));
 app.use(express.static("public"));
+
+//Import Routs
+import healthcheckRouter from "./routs/healthcheck.routs.js";
+
+//routs
+
+app.use("/api/v1/healthcheck", healthcheckRouter);
 
 export { app };
