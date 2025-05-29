@@ -20,7 +20,7 @@ app.use(cookieParser());
 //Import Routs
 import healthcheckRouter from "./routs/healthcheck.routs.js";
 import userRouter from "./routs/user.routs.js";
-import errorHandler from "./middileware/error.middileware.js";
+import errorHandler from "./middleware/error.middleware.js";
 
 //routs
 
