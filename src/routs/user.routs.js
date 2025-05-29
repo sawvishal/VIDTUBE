@@ -13,8 +13,8 @@ import {
   updateUserCoverImage,
   getWatchHistory,
 } from "../controllers/user.controllers.js";
-import { upload } from "../middileware/multer.middileware.js";
-import { verifyJWT } from "../middileware/auth.middileware.js";
+import { upload } from "../middleware/multer.middileware.js";
+import { verifyJWT } from "../middleware/auth.middileware.js";
 
 const router = Router();
 

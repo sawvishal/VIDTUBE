@@ -1,4 +1,4 @@
-import { asyncHandler } from "..//utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import {
@@ -21,7 +21,7 @@ const generateAccessAndRefreshToken = async (userId) => {
   } catch (error) {
     throw new ApiError(
       500,
-      "Something went wrong ehile generating accessand refresh tokens"
+      "Something went wrong wehile generating accessand refresh tokens"
     );
   }
 };
@@ -141,13 +141,13 @@ const loginUser = asyncHandler(async (req, res) => {
   );
 
   const loggedInUser = await User.findById(user._id).select(
-    -password - refreshToken
+    "  -password - refreshToken"
   );
 
   //task
 
   const options = {
-    httponlu: true,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
   };
 
@@ -178,12 +178,12 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secrure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
   };
 
   return res
     .status(200)
-    .clearCookie("accesstoken", options)
+    .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged Out successfully"));
 });
@@ -246,13 +246,13 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
-  if (!isPasswordValid) {
+  if (!isPasswordCorrect) {
     throw new ApiError(401, "Old Password is incorrect");
   }
 
   user.password = newPassword;
 
-  await user.save({ vslidateBeforeSave: false });
+  await user.save({ validateBeforeSave: false });
 
   return res
     .status(200)
@@ -273,7 +273,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   if (!email) {
     throw new ApiError(400, "email is required");
   }
-  User.findById().select("-password");
+  // User.findById().select("-password");
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -328,17 +328,15 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while uploading cover image");
   }
 
-  const user = await user
-    .findByIdAndUpdate(
-      req.user?._id,
-      {
-        $set: {
-          coverImage: coverImage.url,
-        },
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        coverImage: coverImage.url,
       },
-      { new: true }
-    )
-    .select("-password -refreshToken");
+    },
+    { new: true }
+  ).select("-password -refreshToken");
 
   return res
     .status(200)
@@ -377,7 +375,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $addFields: {
         subscriberCount: {
-          $size: "$subscribeers",
+          $size: "$subscribers",
         },
         channelSubscribedToCount: {
           $size: "$subscribedTo",
@@ -411,7 +409,9 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "channel profile fetched successfully "));
+    .json(
+      new ApiResponse(200, channel[0], "channel profile fetched successfully ")
+    );
 });
 
 const getWatchHistory = asyncHandler(async (req, res) => {
